@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import User from "../model/userMode";
+import * as userService from "../services/userServices"
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const users = await User.find({username:{$exists: true}},{password:0});
+        const users = await userService.getAllUsers()
         if (users.length > 0) {
-            const userCount = await User.countDocuments();
+            const userCount = await userService.getUsersCount()
             return res.status(200).json({
                 count: userCount,
                 status: 200,
@@ -17,7 +17,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
             message: "No users found"
         });
     } catch (error) {
-        console.error("Error fetching users:", error);
         return res.status(500).json({
             message: "Internal server error"
         });
@@ -26,14 +25,14 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
-        const user = await User.create(req.body);
+        const user = await userService.createUser(req)
         return res.status(201).json({
             status: 201,
             message: "User created successfully",
             data: user
         });
     } catch (error) {
-        console.error("Error registering user:", error);
+    
         return res.status(500).json({
             message: "Internal server error"
         });
@@ -42,7 +41,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
-        const user = await User.findById(req.params.id);
+        const user = await userService.getSingleUser(req.params.id);
         if (user) {
             return res.status(200).json({
                 status: 200,
@@ -54,7 +53,7 @@ export const getSingleUser = async (req: Request, res: Response) => {
             message: "User not found"
         });
     } catch (error:any) {
-        console.error("Error fetching user:", error);
+      
         return res.status(500).json({
             message: "Internal server error",
             error:error.message
@@ -65,7 +64,7 @@ export const getSingleUser = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        const user = await userService.deleteUser(req.params.id)
         if (user) {
             return res.status(200).json({
                 status: 200,
@@ -77,7 +76,6 @@ export const deleteUser = async (req: Request, res: Response) => {
             message: "User not found"
         });
     } catch (error:any) {
-        console.error("Error deleting user:", error);
         return res.status(500).json({
             message: "Internal server error",
             error:error.message
@@ -88,7 +86,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const user = await userService.updateUser(req)
         if (user) {
             return res.status(200).json({
                 status: 200,
@@ -100,7 +98,7 @@ export const updateUser = async (req: Request, res: Response) => {
             message: "User not found"
         });
     } catch (error:any) {
-        console.error("Error updating user:", error);
+    
         return res.status(500).json({
             message: "Internal server error",
             error:error.message
