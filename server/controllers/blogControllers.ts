@@ -36,7 +36,9 @@ export const registerBlog = async (req: Request, res: Response) => {
             message: "Blog added successfully",
             data: blog,
         })
-    } catch (error:any) {
+    } catch (error: any) {
+        
+        console.log(error)
         res.status(500).json({
             status: 500,
             message: error.message

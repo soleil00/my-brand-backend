@@ -50,11 +50,7 @@ export const updateBlog = async (req: any) => {
         }
 
         let updatedBlog;
-
         
-
-       
-
         if (req.file) {
             const result = await cloudinary.uploader.upload(req?.file?.path)
             updatedBlog = await Blog.findOneAndUpdate(
