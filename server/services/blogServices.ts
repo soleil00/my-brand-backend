@@ -2,6 +2,7 @@
 import Blog, { BlogDocument } from "../model/blogModel";
 import { Request } from "express";
 import cloudinary from "./cloudinary.service";
+import { UserDocument } from "../model/userMode";
 
 
 
@@ -25,29 +26,43 @@ export const getBlogCounts = async () => {
 
 
 
-export const createBlog = async (req:any) => {
+export const createBlog = async (req: any) => {
+    
+    const currentUser : UserDocument = req.currentUser;
+
 
     try {
 
-        const result = await cloudinary.uploader.upload(req.file.path)
+        
 
-        const blog = await Blog.create({
-            ...req.body,
-            image:result.secure_url
-        })
-        return blog;
+        if (currentUser.isAdmin) {
+
+            const result = await cloudinary.uploader.upload(req.file.path)
+
+            const blog = await Blog.create({
+                ...req.body,
+                image:result.secure_url
+            })
+
+            return blog;
+        } else {
+            throw new Error("You are not authorized to perform this action")
+        }
+
+
+        
     } catch (error:any) {
-        throw new Error(`error while creating blog : ${error.message}`);
+        console.log(` ${error.message}`)
+
+        return
     }
 }
 
 export const updateBlog = async (req: any) => {
+
+    const currentUser : UserDocument = req.currentUser;
     try {
         const { id } = req.params;
-
-        if (!/^[0-9a-fA-F]{24}$/.test(id)) {
-            throw new Error("Invalid blog ID");
-        }
 
         let updatedBlog;
         
@@ -76,15 +91,11 @@ export const updateBlog = async (req: any) => {
     }
 };
 
-export const deleteBlogById = async (id:string) => {
+export const deleteBlogById = async (id: string) => {
+    
 
     try {
 
-         if (!/^[0-9a-fA-F]{24}$/.test(id)) {
-            throw new Error("Invalid blog ID");
-        }
-
- 
         const blog = await Blog.findByIdAndDelete(id);
         if (!blog) {
             throw new Error("Blog not found");
@@ -98,11 +109,8 @@ export const deleteBlogById = async (id:string) => {
 export const getBlogById = async (id: string) => {
     try {
 
-         if (!/^[0-9a-fA-F]{24}$/.test(id)) {
-            throw new Error("Invalid blog ID");
-        }
 
-        const blog = await Blog.findById(id)
+        const blog = await Blog.findById(id).populate("comments")
 
         if (!blog) {
             throw new Error("Blog not found");

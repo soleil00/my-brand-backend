@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as blogServices from "../services/blogServices"
+import * as commentServices from "../services/comment.service"
 import { BlogDocument } from "../model/blogModel";
 
 export const getAllBlogs = async (req: Request, res: Response) => {
@@ -31,11 +32,19 @@ export const getAllBlogs = async (req: Request, res: Response) => {
 export const registerBlog = async (req: Request, res: Response) => {
     try {
         const blog: any = await blogServices.createBlog(req)
-        res.status(200).json({
+        
+        if (blog) {
+            res.status(200).json({
             status: 200,
             message: "Blog added successfully",
             data: blog,
         })
+        } else {
+            res.status(404).json({
+                status: 404,
+                message: "Only admin can add blog"
+            })
+        }
     } catch (error: any) {
         
         console.log(error)
@@ -68,6 +77,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
         res.status(200).json({
             status: 200,
             message: "Blog deleted successfully buddy 🤣",
+            test:true
           
         })
     } catch (error:any) {
@@ -105,6 +115,31 @@ export const deleteAllBlogs = async (req: Request, res: Response) => {
             message: "All blogs deleted successfully",
             count: status.count,
         })
+        } else {
+            res.status(404).json({
+                status: 404,
+                message: "No blogs found"
+            })
+        }
+    } catch (error:any) {
+        res.status(404).json({
+            status: 500,
+            message: error.message
+        })
+    }
+}
+
+
+export const addCommentToBlog = async (req: Request, res: Response) => {
+    try {
+        const blog = await commentServices.addCommentToBlog(req)
+        
+        if (blog) {
+            res.status(200).json({
+            status: 200,
+            message: "Comment added successfully",
+            data: blog,
+        })  
         } else {
             res.status(404).json({
                 status: 404,
