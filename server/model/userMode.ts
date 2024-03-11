@@ -1,6 +1,19 @@
 
 import mongoose from 'mongoose';
 
+interface UserI {
+    username: string;
+    password: string;
+    email: string;
+    profile: string;
+    isAdmin: boolean;
+}
+
+export interface UserDocument extends UserI, mongoose.Document {
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -24,6 +37,6 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 })
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<UserDocument>('User', userSchema);
 
 export default User;

@@ -2,23 +2,26 @@
 import mongoose from 'mongoose';
 
 
+interface BlogI {
+    title: string;
+    content: string;
+    image: string;
+}
+
+
 const blogSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    content: {
-        type: String,
-        required: true
-    },
-    image: {
-        type: String,
-        required: true
-    }
+    title:String,
+    content:String,
+    image:String,
 }, {
     timestamps: true
 })
 
-const Blog = mongoose.model('Blog', blogSchema);
+export interface BlogDocument extends BlogI, mongoose.Document {
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const Blog = mongoose.model<BlogDocument>('Blog', blogSchema);
 
 export default Blog;
