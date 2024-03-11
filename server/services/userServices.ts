@@ -1,6 +1,6 @@
 
 import { Request } from "express";
-import User from "../model/userMode";
+import User, { UserDocument } from "../model/userMode";
 
 
 export const getAllUsers = async () => {
@@ -55,5 +55,29 @@ export const getSingleUser = async (id:string) => {
         return user
     } catch (error:any) {
         throw new Error(`Error while getting single user ---> ${error.message}`)
+    }
+}
+
+
+
+export const loginUser = async (req: Request) => {
+    const {email,username,password} = req.body
+    try {
+        const user :UserDocument | null = await User.findOne({$or:[email,username]});
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const isPasswordMatch = user.password === password
+        
+        if (!isPasswordMatch) {
+            throw new Error("Invalid password")
+        }
+
+        return user
+       
+    } catch (error:any) {
+        throw new Error(`Error while logging in user ---> ${error.message}`)
     }
 }
