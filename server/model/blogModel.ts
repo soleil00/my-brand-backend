@@ -1,18 +1,29 @@
 
 import mongoose from 'mongoose';
+import { CommentDocument } from './commentModel';
 
 
 interface BlogI {
     title: string;
     content: string;
     image: string;
+    comments : CommentDocument[]
 }
 
 
 const blogSchema = new mongoose.Schema({
     title:String,
     content:String,
-    image:String,
+    image: String,
+    comments: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'Comment'
+    }],
+    likes: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
+    }]
+    
 }, {
     timestamps: true
 })

@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 
-const messageSchema = new mongoose.Schema({
-    author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
+interface CommentI {
+    author: string;
+    content: string;
+}
+
+const commentSchema = new mongoose.Schema({
+    author: String,
     content: {
         type: String,
         required: true
@@ -13,6 +15,11 @@ const messageSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Message = mongoose.model('Message', messageSchema);
+export interface CommentDocument extends CommentI, mongoose.Document {
+    createdAt: Date;
+    updatedAt: Date;
+}
 
-export default Message
+const Comment = mongoose.model<CommentDocument>('Comment', commentSchema);
+
+export default Comment
