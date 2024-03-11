@@ -1,11 +1,13 @@
-import { environment } from "./env.service";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
-  cloud_name: 'dxy33wiax',
-   api_key: '991555379284442',
-   api_secret: 'ekuY9MDxVtiIeUGqKbLS0V8MTV4'
+  cloud_name: `${process.env.CLOUD_NAME}`,
+   api_key: `${process.env.CLOUD_KEY}`,
+   api_secret: `${process.env.CLOUD_SECRET}`
 });
 
 export default cloudinary;
