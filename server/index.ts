@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express"
-import mongoose, { mongo } from "mongoose"
+import mongoose from "mongoose"
 import dotenv from "dotenv"
+import bodyParser from "body-parser"
+import appRoutes from "./routes"
 
 dotenv.config()
 
@@ -9,15 +11,13 @@ const app = express()
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-
-const userRoutes = require("./routes/userRoutes")
-
+app.use(bodyParser.json())
 
 app.get("/", (req:Request, res:Response) => {
     res.send("api is working properly")
 })
 
-app.use("/api/users",userRoutes)
+app.use("/api/v1",appRoutes)
 
 
 

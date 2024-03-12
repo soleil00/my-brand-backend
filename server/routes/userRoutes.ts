@@ -1,13 +1,18 @@
 import express, { Router } from 'express';
-import { deleteUser, getAllUsers, getSingleUser, registerUser, updateUser } from '../controllers/userController';
-
-const router: Router = express.Router();
-
-router.get("/", getAllUsers)
-router.get("/:id", getSingleUser)
-router.post("/", registerUser)
-router.put("/:id",updateUser)
-router.delete("/:id", deleteUser)
+import { deleteUser, getAllUsers, getSingleUser, loginUser, registerUser, updateUser } from '../controllers/userController';
+import { isAuthenticated } from '../middlewares/isAuthenticated';
+import { isAdmin } from '../middlewares/adminValidation';
 
 
-module.exports = router;
+
+const userRoutes: Router = express.Router();
+
+userRoutes.get("/",isAuthenticated,isAdmin, getAllUsers)
+userRoutes.get("/:id",isAuthenticated,isAdmin, getSingleUser)
+userRoutes.post("/auth/register", registerUser)
+userRoutes.post("/auth/login", loginUser)
+userRoutes.put("/:id",isAuthenticated,isAdmin,updateUser)
+userRoutes.delete("/:id",isAuthenticated,isAdmin, deleteUser)
+
+
+export default userRoutes

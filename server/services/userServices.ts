@@ -1,11 +1,12 @@
 
 import { Request } from "express";
-import User from "../model/userMode";
+import User, { UserDocument } from "../model/userMode";
 
 
 export const getAllUsers = async () => {
     try {
-        const users = await User.find({username:{$exists: true}},{password:0});
+        const users = await User.find();
+        // const users = await User.find({username:{$exists: true}},{password:0});
         return users
     } catch (error:any) {
         throw new Error(`Error happened while fetching all users: ${error.message}`);
@@ -55,5 +56,26 @@ export const getSingleUser = async (id:string) => {
         return user
     } catch (error:any) {
         throw new Error(`Error while getting single user ---> ${error.message}`)
+    }
+}
+
+
+
+export const loginUser = async (req: Request) => {
+    const {email,password} = req.body
+    try {
+        const user :UserDocument | null = await User.findOne({$or:[{email},{username:email}]});
+
+        if (!user) {
+            throw new Error("User not found");
+            
+        }
+
+
+        return user
+       
+    } catch (error:any) {
+        console.log(`${error.message}`)
+        return 
     }
 }
