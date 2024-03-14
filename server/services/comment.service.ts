@@ -13,7 +13,8 @@ export const addCommentToBlog = async (req: any) => {
  
         const comment = await Comment.create({
             content: req.body.content,
-            author: currentUser.username
+            author: currentUser.username,
+            blog:id,
         })
 
         const blog: BlogDocument | null = await Blog.findById(id);

@@ -17,7 +17,7 @@ blogRoutes.delete("/:id",isIdValid,isAuthenticated,isAdmin,deleteBlog)
 blogRoutes.post("/",uploadService.single("image"),isAuthenticated,isAdmin, registerBlog)
 blogRoutes.put("/:id",uploadService.single("image"),isIdValid,isAuthenticated,isAdmin, updateSingleBlog)
 blogRoutes.delete("/",isAuthenticated,isAdmin, deleteAllBlogs) 
-blogRoutes.post("/comment/:id",isAuthenticated,addCommentToBlog)
+blogRoutes.post("/:id/comment",isAuthenticated,addCommentToBlog)
 
 
 

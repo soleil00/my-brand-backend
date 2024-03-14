@@ -64,7 +64,7 @@ export const getSingleUser = async (id:string) => {
 export const loginUser = async (req: Request) => {
     const {email,password} = req.body
     try {
-        const user :UserDocument | null = await User.findOne({$or:[{email},{username:email}]});
+        const user :UserDocument = await User.findOne({$or:[{email},{username:email}]}).select("password");
 
         if (!user) {
             throw new Error("User not found");
