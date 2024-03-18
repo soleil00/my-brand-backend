@@ -7,7 +7,8 @@ interface BlogI {
     title: string;
     content: string;
     image: string;
-    comments : CommentDocument[]
+    comments: CommentDocument[],
+    likes: mongoose.Types.ObjectId[];
 }
 
 

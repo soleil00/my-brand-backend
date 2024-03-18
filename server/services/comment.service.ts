@@ -16,17 +16,11 @@ export const addCommentToBlog = async (req: any) => {
             author: currentUser.username,
             blog:id,
         })
-
-        const blog: BlogDocument | null = await Blog.findById(id);
+        const blog: BlogDocument | null = await Blog.findById(id).populate("comments");
         
         if (!blog) {
             throw new Error("Blog not found");
         }
-
-        blog.comments.push(comment);
-        
-        await blog.save();
-
         return blog;
     } catch (error: any) {
         throw new Error(`Error while adding comment to blog ${error.message}`);

@@ -8,7 +8,7 @@ import { UserDocument } from "../model/userMode";
 
 export const fetchAllBlogs = async () => {
     try {
-        const blogs = await Blog.find()
+        const blogs = await Blog.find().populate("comments")
         return blogs;
     } catch (error) {
         
@@ -72,7 +72,7 @@ export const updateBlog = async (req: any) => {
             { _id: id },
             { ...req.body,image:result.secure_url },
             { new: true }
-        )
+        ).populate("comments")
         } else {
              updatedBlog = await Blog.findOneAndUpdate(
             { _id: id },

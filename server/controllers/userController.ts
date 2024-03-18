@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as userService from "../services/userServices"
 import * as jwtService from "../services/jwtServices.service"
+import User from "../model/userMode";
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
@@ -26,6 +27,15 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const registerUser = async (req: Request, res: Response) => {
     try {
+
+        const emailExist = await User.findOne({ email: req.body.email });
+
+        if (emailExist) {
+            return res.status(400).json({
+                status: 400,
+                message: "Email already exists"
+            });
+        }
         const user = await userService.createUser(req)
         return res.status(201).json({
             status: 201,

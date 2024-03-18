@@ -11,7 +11,6 @@ export const getAllBlogs = async (req: Request, res: Response) => {
         if (count> 0) {
             res.status(200).json({
                 status: 200,
-                message: "Here is list of all Blogs",
                 count: count,
                 data: allBlogs,
             })
@@ -33,18 +32,11 @@ export const registerBlog = async (req: Request, res: Response) => {
     try {
         const blog: any = await blogServices.createBlog(req)
         
-        if (blog) {
-            res.status(200).json({
+         res.status(200).json({
             status: 200,
             message: "Blog added successfully",
             data: blog,
         })
-        } else {
-            res.status(404).json({
-                status: 404,
-                message: "Only admin can add blog"
-            })
-        }
     } catch (error: any) {
         
         console.log(error)
@@ -93,7 +85,7 @@ export const getSingleBlog = async (req: Request, res: Response) => {
         const blog: any = await blogServices.getBlogById(req.params.id)
         res.status(200).json({
             status: 200,
-            message: "Here is the blog that u are looking for",
+
             data: blog,
         })
     } catch (error:any) {

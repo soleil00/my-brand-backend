@@ -5,7 +5,7 @@ import User, { UserDocument } from "../model/userMode";
 
 export const getAllUsers = async () => {
     try {
-        const users = await User.find();
+        const users = await User.find().select("-password");
         // const users = await User.find({username:{$exists: true}},{password:0});
         return users
     } catch (error:any) {

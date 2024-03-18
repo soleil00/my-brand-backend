@@ -1,43 +1,25 @@
 import { NextFunction, Request, Response } from "express";
+import Joi from "joi";
 
 
+const messageSchame = Joi.object({
+    name: Joi.string().required().error(new Error("Name is Missing in request")),
+    subject: Joi.string().required().error(new Error("subject is Missing in request")),
+    email: Joi.string().required().error(new Error("email is Missing in request")),
+    message: Joi.string().required().error(new Error("message is Missing in request")),
+    subscribed: Joi.boolean().default(false)
+})
 
-export const isMessageValidated = async (req: Request, res: Response, next: NextFunction) => {
-    
-    const { message, name, subject, email } = req.body;
-    
+
+export async function validateMessage(req: Request, res: Response, next: NextFunction) {
     try {
-        if (!message) {
-            return res.status(400).json({
-                status: 400,
-                message: "Message is required"
-            });
-        } else if (!name) {
-            return res.status(400).json({
-                status: 400,
-                message: "Name is required"
-            });
-        } else if (!subject) {
-            return res.status(400).json({
-                status: 400,
-                message: "Subject is required"
-            });
-        } else if (!email) {
-            return res.status(400).json({
-                status: 400,
-                message: "Email is required"
-            });
-        }
-
-        return next();
+        await messageSchame.validateAsync(req.body, { abortEarly: false })
+        return next()
     } catch (error:any) {
-        console.log(`error happened: ${error.message}`);
-        return res.status(500).json({
-            message: "Internal server error",
-            error:error.message
-        });
+         return res.status(400).json({
+            status: 400,
+            message: "Message validation failed",
+            error: error.message
+        })
     }
-    
 }
-
-

@@ -6,6 +6,9 @@ import uploadService from '../services/multer.service';
 import { isAuthenticated } from '../middlewares/isAuthenticated';
 import { isIdValid } from '../middlewares/idValidation';
 import { isAdmin } from '../middlewares/adminValidation';
+import { validateBlog, validateUpdateBlog } from '../middlewares/blogValidation';
+import { validateComment } from '../middlewares/commentValidation';
+import { addLikeToBlog } from '../services/like.service';
 
 
 const blogRoutes: Router = express.Router();
@@ -14,10 +17,11 @@ const blogRoutes: Router = express.Router();
 blogRoutes.get("/", getAllBlogs)
 blogRoutes.get("/:id", isIdValid, getSingleBlog)
 blogRoutes.delete("/:id",isIdValid,isAuthenticated,isAdmin,deleteBlog)
-blogRoutes.post("/",uploadService.single("image"),isAuthenticated,isAdmin, registerBlog)
-blogRoutes.put("/:id",uploadService.single("image"),isIdValid,isAuthenticated,isAdmin, updateSingleBlog)
+blogRoutes.post("/",uploadService.single("image"),isAuthenticated,isAdmin,validateBlog, registerBlog)
+blogRoutes.put("/:id",uploadService.single("image"),isIdValid,isAuthenticated,isAdmin,validateUpdateBlog, updateSingleBlog)
 blogRoutes.delete("/",isAuthenticated,isAdmin, deleteAllBlogs) 
-blogRoutes.post("/:id/comment",isAuthenticated,addCommentToBlog)
+blogRoutes.post("/:id/comment", isAuthenticated, validateComment, addCommentToBlog)
+blogRoutes.post("/:id/like",isAuthenticated,addLikeToBlog)
 
 
 

@@ -26,9 +26,13 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
-    profile: String,
+    profile: {
+        type: String,
+        default:"https://up.yimg.com/ib/th?id=OIP.52T8HHBWh6b0dwrG6tSpVQHaFe&%3Bpid=Api&rs=1&c=1&qlt=95&w=156&h=115"
+    },
     isAdmin: {
         type: Boolean,
         default: false
