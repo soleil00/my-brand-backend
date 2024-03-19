@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
-    "dev": "nodemon  server/index.ts"
+    "dev": "nodemon  server/index.ts",
+    "test": "jest --silent",
+    "test:coverage": "nyc --reporter=lcov jest",
+    "test:report": "nyc report --reporter=html"
   },
   "keywords": [],
   "author": "",
@@ -44,5 +47,15 @@
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2"
+  },
+ 
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "preset": "ts-jest"
   }
+
+
 }

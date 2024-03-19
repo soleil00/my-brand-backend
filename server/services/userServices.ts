@@ -5,8 +5,8 @@ import User, { UserDocument } from "../model/userMode";
 
 export const getAllUsers = async () => {
     try {
-        const users = await User.find().select("-password");
-        // const users = await User.find({username:{$exists: true}},{password:0});
+        // const users = await User.find();
+        const users = await User.find({username:{$exists: true}});
         return users
     } catch (error:any) {
         throw new Error(`Error happened while fetching all users: ${error.message}`);
@@ -64,7 +64,7 @@ export const getSingleUser = async (id:string) => {
 export const loginUser = async (req: Request) => {
     const {email,password} = req.body
     try {
-        const user :UserDocument = await User.findOne({$or:[{email},{username:email}]}).select("password");
+        const user :any = await User.findOne({$or:[{email},{username:email}]});
 
         if (!user) {
             throw new Error("User not found");

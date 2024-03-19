@@ -52,13 +52,15 @@ export const updateSingleBlog = async (req: Request, res: Response) => {
         const blog = await blogServices.updateBlog(req)
         res.status(200).json({
             status: 200,
+            success: true,
             message: "Blog updated successfully 🦸‍♀️",
             data: blog,
         })
     } catch (error:any) {
         res.status(404).json({
             status: 500,
-            message: error.message
+            message: error.message,
+            success: false,
         })
     }
 }
@@ -69,13 +71,14 @@ export const deleteBlog = async (req: Request, res: Response) => {
         res.status(200).json({
             status: 200,
             message: "Blog deleted successfully buddy 🤣",
-            test:true
+            success:true
           
         })
     } catch (error:any) {
         res.status(404).json({
             status: 500,
-            message: error.message
+            message: error.message,
+            success: false,
         })
     }
 }
@@ -85,7 +88,7 @@ export const getSingleBlog = async (req: Request, res: Response) => {
         const blog: any = await blogServices.getBlogById(req.params.id)
         res.status(200).json({
             status: 200,
-
+            success: true,
             data: blog,
         })
     } catch (error:any) {
