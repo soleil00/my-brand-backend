@@ -13,7 +13,7 @@ export const getAllSubscribers = async (req:Request, res:Response) => {
         if (count > 0) {
             return res.status(200).json({
                 status: 200,
-                message: "Subscribers fetched successfully",
+                message: "Subscribers fetched successfull",
                 count: count,
                 data: allSubs
             })
