@@ -53,7 +53,12 @@ export const deleteUser = async (id:string) => {
 export const getSingleUser = async (id:string) => {
     try {
         const user = await User.findById(id);
-        return user
+        if(user){
+
+            return user
+        } else {
+            throw new Error("User not found")
+        }
     } catch (error:any) {
         throw new Error(`Error while getting single user ---> ${error.message}`)
     }

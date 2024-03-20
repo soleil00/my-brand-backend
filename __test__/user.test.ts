@@ -5,7 +5,7 @@ import app from "../server";
 // import singleUser from "./constants/user";
 
 const userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWViMmMzNTk5NDQ5NjQ4MGYzYTVkMDMiLCJpYXQiOjE3MTA3NjU2NzMsImV4cCI6MTcxMzM1NzY3M30.0dXEoZQiRv9_QImcthzR810UAWDEK3Rd2KqM0pb4d_Y"
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVlZTllMTZjYTMzOWM4ZWI4ZWE2MjIiLCJpYXQiOjE3MTA3NjA0MTQsImV4cCI6MTcxMzM1MjQxNH0.7Yq6yc7U4rYMNbd3AjyOHygIcpwkr4Jq6Uz_B0ZvwS4"
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVlZTllMTZjYTMzOWM4ZWI4ZWE2MjIiLCJpYXQiOjE3MTA5MzA0NDEsImV4cCI6MTcxMzUyMjQ0MX0.r6pv4leZKAo3wSQr1tp_k20EjRENwi01BB2-B9RxhOU"
 
 const singleUser = {
     profile: "https://up.yimg.com/ib/th?id=OIP.52T8HHBWh6b0dwrG6tSpVQHaFe&%3Bpid=Api&rs=1&c=1&qlt=95&w=156&h=115",
@@ -129,8 +129,8 @@ describe("Test Get all users", () => {
 
 describe("Test Get single user", () => {
    test('Test user not found', async () => {
-        jest.spyOn(User, "findById").mockResolvedValueOnce({isAdmin:false, name: "test", email: "test@example.com", password: "testpassword", _id: "Some_user_id"}).mockResolvedValueOnce(undefined);
-        const users = await request(app).get("/api/v1/users/userId").set({"Authorization": `Bearer ${token}`});
+        jest.spyOn(User, "findById").mockResolvedValueOnce(undefined);
+        const users = await request(app).get("/api/v1/users/soemrandomstirngforuser").set({"Authorization": `Bearer ${token}`});
         expect(users.status).toBe(404);
      })
     test('Test get user success', async () => {

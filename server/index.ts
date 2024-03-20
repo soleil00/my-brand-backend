@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import appRoutes from "./routes";
+import dbConnection from "./config/databaseConnection";
+import docRouter from "./doc/swaggerOptions";
 
 dotenv.config();
 
@@ -17,20 +18,16 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1", appRoutes);
+app.use("/api/v1/docs", docRouter)
+
+dbConnection().then(()=>{
+  app.listen(process.env.PORT || 3000, () => {
+    console.log("Connected to MongoDB");
+  })
+}).catch((error:any)=>{
+  console.log(`failed to connect to db with error : ${error.message}`)
+})
 
 
-mongoose.connect(`${process.env.MONGODB_URL}`).then(() => {
-  console.log("Connected to MongoDB");
-});
-
-const server = app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server is running`);
-});
-
-
-// afterAll(async () => {
-//   await mongoose.connection.close();
-//   server.close();
-// });
 
 export default app;

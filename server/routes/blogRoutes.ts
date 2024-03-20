@@ -14,10 +14,12 @@ import { addLikeToBlog } from '../services/like.service';
 const blogRoutes: Router = express.Router();
 
 
-blogRoutes.get("/", getAllBlogs)
+blogRoutes.get("/", getAllBlogs) 
 blogRoutes.get("/:id", isIdValid, getSingleBlog)
 blogRoutes.delete("/:id",isIdValid,isAuthenticated,isAdmin,deleteBlog)
 blogRoutes.post("/",uploadService.single("image"),isAuthenticated,isAdmin,validateBlog, registerBlog)
+
+
 blogRoutes.put("/:id",uploadService.single("image"),isIdValid,isAuthenticated,isAdmin,validateUpdateBlog, updateSingleBlog)
 blogRoutes.delete("/",isAuthenticated,isAdmin, deleteAllBlogs) 
 blogRoutes.post("/:id/comment", isAuthenticated, validateComment, addCommentToBlog)
