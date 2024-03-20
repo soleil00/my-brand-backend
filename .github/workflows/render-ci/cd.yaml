@@ -1,7 +1,7 @@
 name: Deploying app on Render
 
 on:
-  push:
+  pull_request:
     branches: [main]
 
 jobs:
