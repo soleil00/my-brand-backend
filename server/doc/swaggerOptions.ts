@@ -15,6 +15,9 @@ const options = {
     },
     servers:[
         {
+            url: 'https://my-brand-backend-1-cqku.onrender.com',
+        },
+        {
             url: `http://localhost:${process.env.PORT}`,
         }
     ],
@@ -167,25 +170,18 @@ const options = {
                 }
             },
             post:{
-                tags:["Blogs"],
-                description:"Add a new blog",
-                parameters: [{
-                    in: "formData",
-                    name: "title",
-                    type: "string",
-                    required: true
-                }, {
-                    in: "formData",
-                    name: "content",
-                    type: "string",
-                    required: true
-                }, {
-                    in: "formData",
-                    name: "image",
-                    type: "string",
-                    format: "binary",
-                    required: true
-                }],
+                tags: ["Blogs"],
+                summary: "Create a new blog",
+                requestBody: {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                    schema: {
+                        $ref: "#/components/schemas/Blog",
+                    },
+                    },
+                },
+                },
                 responses:{
                     201:{
                         description:"successfully"
@@ -236,30 +232,29 @@ const options = {
                     },
                 }
             },
-            patch:{
+            put:{
                 tags:["Blogs"],
                 description:"Update a blog",
-                parameters:[{
-                    in: "path",
-                    name: "id",
-                    required: true
-                }, {
-                    in: "formData",
-                    name: "title",
-                    type: "string",
-                    required: true
-                }, {
-                    in: "formData",
-                    name: "content",
-                    type: "string",
-                    required: true
-                }, {
-                    in: "formData",
-                    name: "image",
-                    type: "string",
-                    format: "binary",
-                    required: true
-                }],
+                parameters: [
+                    {
+                      name: "id",
+                      in: "path",
+                      required: true,
+                      schema: {
+                        type: "string",
+                      },
+                    },
+                  ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/Blog",
+                        },
+                        },
+                    },
+                    },
                 responses:{
                     201:{
                         description:"successfully"
@@ -303,29 +298,26 @@ const options = {
             post:{
                 tags:["Blogs"],
                 description:"Add a comment to a blog",
-                parameters:[{
-                    in: "path",
-                    name: "id",
+                parameters: [
+                    {
+                      name: "id",
+                      in: "path",
+                      required: true,
+                      schema: {
+                        type: "string",
+                      },
+                    },
+                  ],
+                requestBody: {
                     required: true,
-                    
-                
-                }],
-                requestBody :{
-                    required:true,
-                    content:{
-                        "Application/json":{
-                            schemas:{
-                                type: "object",
-                                properties:{
-                                    content:{
-                                        type: "string",
-                                        required: true
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
+                    content: {
+                        "application/json": {
+                        schema: {
+                            $ref: "#/components/schemas/Comment",
+                        },
+                        },
+                    },
+                    },
                 responses:{
                     201:{
                         description:"successfully"
@@ -532,38 +524,20 @@ const options = {
             },
             required: ["username", "email", "password"]
           },
-          Blog:{
+          Blog: {
             type: "object",
-            properties:{
-                title: {
-                    type: "string",
-                    description: "Title of the blog"
-                },
-                content: {
-                    type: "string",
-                    description: "Content of the blog"
-                },
-                likes: {
-                    type: "number",
-                    description: "Number of likes"
-                },
-                comments: {
-                    type: "number",
-                    description: "Number of comments"
-                },
-                image: {
-                    type: "string",
-                    description: "Blog thumb image"
-                }
+            properties: {
+              title: {
+                type: "string",
+              },
+              content: {
+                type: "string",
+              },
+              image: {
+                type: "string",
+                format: "binary",
+              },
             },
-            example : {
-                title: "Blog Title",
-                content: "Blog Content",
-                likes: 5,
-                comments: 32,
-                image: "https://up.yimg.com/ib/th?id=OIP.zHqEQz1t4GXXp4J3tvlTnAHaEc&%3Bpid=Api&rs=1&c=1&qlt=95&w=187&h=112"
-            },
-            required: ["title", "content", "image"]
           },
           Message:{
             type: "object",
@@ -598,45 +572,18 @@ const options = {
             },
             required: ["name", "subject", "email", "message"]
           },
-          Subscriber:{
-            type: "object",
-            properties:{
-                name: {
-                    type: "string",
-                    description: "Name of the user who subscribd to my newsletter"
-                },
-                email: {
-                    type: "string",
-                    description: "Email of the user who subscribed to my newsletter"
-                }
-            },
-            example : {
-                name: "john Does",
-                email: "johndoes@gmail.com",
-            },
-            required: ["name", "email"]
-          },
           Comment:{
             type: "object",
             properties:{
-                author: {
-                    type: "string",
-                    description: "userId of current logged in user who is commnting"
-                },
                 content: {
                     type: "string",
                     description: "actual comment from user"
                 },
-                blog: {
-                    type: "string",
-                    description: "current blogId that user is commenting on"
-                }
             },
 
             examples: {
-                author:"drwr",
                 content:"Wow nice job john doe",
-                blog: "5f232323"
+
             },
 
             required: ["content"]
@@ -684,7 +631,7 @@ const options = {
               email: "test@email.yours",
               password: "pass123",
             },
-          }
+          },
         },
     },
 
@@ -694,3 +641,23 @@ docRouter.use("/", serve);
 docRouter.get("/",setup(options))
 
 export default docRouter;
+
+
+
+
+
+
+// post: {
+//     tags: ["Blogs"],
+//     summary: "Create a new blog",
+//     requestBody: {
+//       required: true,
+//       content: {
+//         "multipart/form-data": {
+//           schema: {
+//             $ref: "#/components/schemas/Blog",
+//           },
+//         },
+//       },
+//     },
+//   }

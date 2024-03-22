@@ -6,7 +6,6 @@ import { join } from "path";
 
 const commentSchema = Joi.object({
     content: Joi.string().required().error(new Error("Each comment must have a value")),
-    blog: Joi.string().required().error(new Error("Blog id is missing buddy")),
 })
 
 

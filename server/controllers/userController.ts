@@ -52,17 +52,10 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
-        const user = await userService.getSingleUser(req.params.id);
-        if (user) {
-            return res.status(200).json({
-                status: 200,
-                message: "User found",
-                data: user
-            });
-        }
-        return res.status(404).json({
-            message: "User not found"
-        });
+        const response = await userService.getSingleUser(req,res);
+
+        return response
+        
     } catch (error:any) {
       
         return res.status(500).json({
@@ -141,7 +134,7 @@ export const loginUser = async (req: Request, res: Response) => {
             token: token
         });
         } else {
-            return res.status(401).json({
+            return res.status(400).json({
                 message: "Invalid Password"
             });
         }

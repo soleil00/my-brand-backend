@@ -34,7 +34,7 @@ export const registerBlog = async (req: Request, res: Response) => {
         
          res.status(200).json({
             status: 200,
-            message: "Blog added successfully",
+            message: "Blog added successfully soleil",
             data: blog,
         })
     } catch (error: any) {
@@ -132,18 +132,13 @@ export const addCommentToBlog = async (req: Request, res: Response) => {
         if (blog) {
             res.status(200).json({
             status: 200,
-            message: "Comment added successfully",
+            message: "Comment added successfully hh",
             data: blog,
         })  
-        } else {
-            res.status(404).json({
-                status: 404,
-                message: "No blogs found"
-            })
-        }
+        } 
     } catch (error:any) {
         res.status(404).json({
-            status: 500,
+            status: 404,
             message: error.message
         })
     }

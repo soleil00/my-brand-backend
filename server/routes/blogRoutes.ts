@@ -22,8 +22,8 @@ blogRoutes.post("/",uploadService.single("image"),isAuthenticated,isAdmin,valida
 
 blogRoutes.put("/:id",uploadService.single("image"),isIdValid,isAuthenticated,isAdmin,validateUpdateBlog, updateSingleBlog)
 blogRoutes.delete("/",isAuthenticated,isAdmin, deleteAllBlogs) 
-blogRoutes.post("/:id/comment", isAuthenticated, validateComment, addCommentToBlog)
-blogRoutes.post("/:id/like",isAuthenticated,addLikeToBlog)
+blogRoutes.post("/:id/comment",isIdValid, isAuthenticated, validateComment, addCommentToBlog)
+blogRoutes.post("/:id/like",isIdValid,isAuthenticated,addLikeToBlog)
 
 
 

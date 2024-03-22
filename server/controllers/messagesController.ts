@@ -16,9 +16,6 @@ export const userSendMessage = async (req:Request, res:Response) => {
 }
 
 
-// export const getSingleMessage = async (req: Request, res: Response) => {
-    
-// }
 
 export const getAllMessages = async (req: Request, res: Response) => {
 

@@ -8,7 +8,7 @@ import * as jwtServices from "../services/jwtServices.service"
 export const isAuthenticated = async (req: any, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-        return res.status(401).json({ error: "Soleil says token is missing 👎" });
+        return res.status(400).json({ error: "Soleil says token is missing 👎" });
     }
     try {
         const user = await jwtServices.decodeUserToken(token)

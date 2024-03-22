@@ -30,33 +30,28 @@ export const createBlog = async (req: any) => {
     
     const currentUser : UserDocument = req.currentUser;
 
-
     try {
+        let blog;
 
-        
-
-        if (currentUser.isAdmin) {
-
-            const result = await cloudinary.uploader.upload(req.file.path)
-
-            const blog = await Blog.create({
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            blog = await Blog.create({
                 ...req.body,
-                image:result.secure_url
-            })
-
-            return blog;
+                image: result.secure_url
+            });
         } else {
-            throw new Error("You are not authorized to perform this action")
+            blog = await Blog.create({
+                ...req.body
+            });
         }
 
-
-        
+        return blog;
+      
     } catch (error:any) {
-        console.log(` ${error.message}`)
-
-        return
+        console.log(`Error creating blog: ${error.message}`);
+        return null; // Return null to indicate failure
     }
-}
+};
 
 export const updateBlog = async (req: any) => {
 
