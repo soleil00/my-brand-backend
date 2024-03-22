@@ -3,11 +3,10 @@ name: Deploying app on Render
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-  run_test:
-    runs-on: ubuntu-latest
-
   install_dep:
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +32,4 @@ jobs:
           curl -X POST -H "Content-Type: application/json" -d '{"branch": "main", "public": true}' https://api.render.com/deploy/srv-cnt7f4acn0vc73evu8cg?key=D4J_OGegb1Y
 
       - name: Start server
-        run: |
-          cd dist/server
-          node index.js
+        run: cd dist/server && node index.js

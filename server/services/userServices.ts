@@ -1,5 +1,5 @@
 
-import { Request } from "express";
+import { Request,Response } from "express";
 import User, { UserDocument } from "../model/userMode";
 
 
@@ -50,14 +50,21 @@ export const deleteUser = async (id:string) => {
     }
 }
 
-export const getSingleUser = async (id:string) => {
+export const getSingleUser = async (req:Request,res:Response) => {
     try {
-        const user = await User.findById(id);
+        const user = await User.findById(req.params.id);
         if(user){
 
-            return user
+            res.status(200).json({
+                status: 200,
+                message: "User found",
+                data: user
+            })
         } else {
-            throw new Error("User not found")
+            res.status(404).json({
+                message: "User not found",
+                status: 404
+            })
         }
     } catch (error:any) {
         throw new Error(`Error while getting single user ---> ${error.message}`)

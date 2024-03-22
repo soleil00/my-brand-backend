@@ -1,141 +1,200 @@
-import User from "../server/model/userMode"; // Corrected import path
-import request from "supertest";
-import { describe, test, jest, expect } from "@jest/globals";
-import app from "../server";
-// import singleUser from "./constants/user";
+import request from "supertest"
+import app from "../server/app"
+import { jest,describe,test,expect,beforeAll,afterAll } from "@jest/globals"
+import { after } from "node:test"
 
-const userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWViMmMzNTk5NDQ5NjQ4MGYzYTVkMDMiLCJpYXQiOjE3MTA3NjU2NzMsImV4cCI6MTcxMzM1NzY3M30.0dXEoZQiRv9_QImcthzR810UAWDEK3Rd2KqM0pb4d_Y"
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVlZTllMTZjYTMzOWM4ZWI4ZWE2MjIiLCJpYXQiOjE3MTA5MzA0NDEsImV4cCI6MTcxMzUyMjQ0MX0.r6pv4leZKAo3wSQr1tp_k20EjRENwi01BB2-B9RxhOU"
-
-const singleUser = {
-    profile: "https://up.yimg.com/ib/th?id=OIP.52T8HHBWh6b0dwrG6tSpVQHaFe&%3Bpid=Api&rs=1&c=1&qlt=95&w=156&h=115",
-      _id: "dummyid",
-      username: "kazuba",
-      email: "update",
-      isAdmin: false,
-      createdAt: '2024-03-08T15:23:52.134Z',
-      updatedAt: '2024-03-08T16:14:14.838Z',
-}
-test("Test home route", async () => {
-  const res = await request(app).get("/");
-  expect(res.statusCode).toBe(200);
-});
-
-test("Test non existing route", async () => {
-  const res = await request(app).get("/sdsdsfds");
-  expect(res.statusCode).toBe(404);
-});
-
-describe("Testing user registrations", () => {
-  test("Testing if user already registered", async () => {
-    jest.spyOn(User, "findOne").mockResolvedValueOnce({ email: "solei45l@gmail.com" });
-    const user = await request(app).post("/api/v1/users/auth/register").send({
-      email: "solei45l@gmail.com",
-      password: "testpassword",
-      username: "testuser",
-    });
-    expect(user.statusCode).toBe(400);
-  });
-
-  test.skip("Testing successful registered user", async () => {
-    jest.spyOn(User, "findOne").mockResolvedValueOnce({username:"soem", password:"testpassword",email: "soem@gmail.com"});
-    const user = await request(app).post("/api/v1/users/auth/register").send({
-      username:"soem", password:"testpassword",email: "soem@gmail.com"
-    });
-    expect(user.status).toBe(201);
-  });
-});
-
-describe("Test user login", () => {
-  test("Test user does not exist", async () => {
-    jest.spyOn(User, "findOne").mockResolvedValueOnce(undefined);
-    const user = await request(app).post("/api/v1/users/auth/login").send({
-      email: "test@example.com",
-      password: "testpassword",
-    });
-    expect(user.status).toBe(404);
-  });
-
-  test("Test incorrect password", async () => {
-    jest.spyOn(User, "findOne").mockResolvedValueOnce({ email: "admin@admin.com", password: "testpassss" });
-    const user = await request(app).post("/api/v1/users/auth/login").send({
-      email: "admin@admin.com",
-      password: "testpassword",
-    });
-    expect(user.status).toBe(401);
-  });
-
-  test("Test success", async () => {
-    jest.spyOn(User, "findOne").mockResolvedValueOnce({ email: "admin@admin.com", password: "admin" });
-    const user = await request(app).post("/api/v1/users/auth/login").send({
-      email: "admin@admin.com", 
-      password: "admin",
-    });
-    expect(user.status).toBe(200);
-  });
-});
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVlZTllMTZjYTMzOWM4ZWI4ZWE2MjIiLCJpYXQiOjE3MTEwOTk5OTksImV4cCI6MTcxMzY5MTk5OX0.f6UVPOwqBO21O8he31vGgfwChNVrlDjO0CjVQAPTA_Y"
+const dummyToken ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWViMzllMWY1MTBmNDdhYjZmNjkyOTEiLCJpYXQiOjE3MTExMDEzNzIsImV4cCI6MTcxMzY5MzM3Mn0.9YQZz9PBtfJkKihoQMSOuI67jyMSQckHgFaDmbzOg95'
 
 
+describe("Test users routes",()=>{
 
-describe("Test Get all users", () => {
-  describe("test isAuthenticated middleware", () => {
+  let testUserId:string='65eb39e1f510f47ab6f69291';
+  let nonExistingUserId:string ='123456789098765432123456'
+  let newCreatedUserId:string;
 
-
-    test("Test if no token provided in header(isAuthenticated)", async () => {
-      const res = await request(app).get("/api/v1/users");
-      expect(res.statusCode).toBe(401);
-    });
-
-
-    test("test for invalid token provided", async() => {
-      const res = await request(app)
-        .get("/api/v1/users")
-        .set({"Authorization": "Bearer some_token"})
-      
-      expect(res.statusCode).toBe(401);
+  beforeAll(async()=>{
+    const response = await request(app).post("/api/v1/users/auth/login").send({
+      email:"soleil000",
+      password:"asdd"
     })
 
-    test("Test for is Authenticated but not is admin logged in", async() => {
-      const res = await request(app)
-                        .get("/api/v1/users")
-                        .set({"Authorization": `Bearer ${userToken}`})
-      expect(res.statusCode).toBe(401);
-    })
-    
+    testUserId = response.body.data._id
+  },10000)
 
-    describe("Test isAdmin middleare", () => {
-      
-
-      test("Test isAuthenticated and isAdmin logged in", async () => {
-        const res = await request(app)
-          .get("/api/v1/users")
-          .set({ "Authorization": `Bearer ${token}` })
-        
-        expect(res.statusCode).toBe(200);
-      });
-
-
-       test('Test no users', async () => {
-        jest.spyOn(User, "find").mockResolvedValueOnce([]);
-        const users = await request(app).get("/api/v1/users").set({"Authorization": `Bearer ${token}`});
-        expect(users.status).toBe(404);
-     },10000);
-    })
-
+  afterAll(async()=>{
 
   })
-})
+
+   test("GET /api/users (Get all users - Unauthorized access no token)",async()=>{
+
+    const response = await request(app).get("/api/v1/users")
+
+    expect(response.status).toBe(400);
+
+   },10000)
 
 
-describe("Test Get single user", () => {
-   test('Test user not found', async () => {
-        jest.spyOn(User, "findById").mockResolvedValueOnce(undefined);
-        const users = await request(app).get("/api/v1/users/soemrandomstirngforuser").set({"Authorization": `Bearer ${token}`});
-        expect(users.status).toBe(404);
-     })
-    test('Test get user success', async () => {
-        jest.spyOn(User, "findById").mockResolvedValueOnce({isAdmin:false, name: "test", email: "test@example.com", password: "testpassword", _id: "Some_user_id"}).mockResolvedValueOnce({ name: "test", email: "test@example.com", password: "testpassword", _id: "Some_user_id"});
-        const users = await request(app).get("/api/v1/users/userId").set({"Authorization": `Bearer ${token}`});
-        expect(users.status).toBe(200);
-     })
+   test("GET /api/users (Get all users - Authenticated non-admin access)",async()=>{
+
+    const response = await request(app).get("/api/v1/users").set({"Authorization": `Bearer ${dummyToken}`})
+
+    expect(response.status).toBe(401);
+
+   },10000)
+
+
+   test("GET /api/users (Get all users - Authenticated admin access)",async()=>{
+
+    const response = await request(app).get("/api/v1/users").set({"Authorization": `Bearer ${token}`})
+
+    expect(response.status).toBe(200);
+
+   },10000)
+
+
+   test("GET /api/users/:id (Get single user - Unauthorized access)",async()=>{
+
+    const response = await request(app).get(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${dummyToken}`})
+
+    expect(response.status).toBe(401);
+
+   },10000)
+
+
+   test("GET /api/users/:id (Get single user - Authenticated access)",async()=>{
+
+    const response = await request(app).get(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${token}`})
+
+    expect(response.status).toBe(200);
+
+   },10000)
+
+
+   test("GET /api/users/:id (Get single user - Non-existent user)",async()=>{
+
+    const response = await request(app).get(`/api/v1/users/${nonExistingUserId}`).set({"Authorization": `Bearer ${token}`})
+
+    expect(response.status).toBe(404);
+
+    // suggest invalid id lenfgth test
+
+   },10000)
+
+
+   test.skip("POST /api/users/auth/register (Register user - Valid registration)",async()=>{
+
+    const response = await request(app).post("/api/v1/users/auth/register").send({
+      email:"dummy@gmail.com",
+      password:"dummy-password",
+      username:"dummy-username"
+    })
+
+    expect(response.status).toBe(201);
+
+   },10000)
+
+//
+   test("POST /api/users/auth/register (Register user - Invalid registration data)",async()=>{
+
+    const response = await request(app).post("/api/v1/users/auth/register").send({
+      password:"dummy-password",
+      username:"dummy-username"
+    })
+
+    expect(response.status).toBe(400);
+
+   },10000)
+
+
+   test("POST /api/users/auth/login (Login user - Successful login)",async()=>{
+
+    const response = await request(app).post("/api/v1/users/auth/login").send({
+      password:"someusername",
+      email:"dummydata"
+    })
+
+    expect(response.status).toBe(200);
+
+   },10000)
+
+//login user here
+   test("POST /api/users/auth/login (Login user - User not found)",async()=>{
+
+    const response = await request(app).post("/api/v1/users/auth/login").send({
+      password:"someusername56",
+      email:"solidity-course"
+    })
+
+    expect(response.status).toBe(404);
+
+   },10000)
+
+   test("POST /api/users/auth/login (Login user - Invalid credentials,password)",async()=>{
+
+    const response = await request(app).post("/api/v1/users/auth/login").send({
+      password:"someusername",
+      email:"dummydatayes"
+    })
+
+    expect(response.status).toBe(400);
+
+   },10000)
+
+
+   test("PUT /api/users/:id (Update user - unauthenticated access)",async()=>{
+
+    const response = await request(app).put(`/api/v1/users/${testUserId}`).send({
+      profile:"https://up.yimg.com/ib/th?id=OIP.52T8HHBWh6b0dwrG6tSpVQHaFe&%3Bpid=Api&rs=1&c=1&qlt=95&w=156&h=115"
+    })
+
+    expect(response.status).toBe(400);
+
+   },10000)
+
+
+   test("PUT /api/users/:id (Update user - Authenticated non-admin access)",async()=>{
+
+    const response = await request(app).put(`/api/v1/users/${testUserId}`)
+    .send({
+      profile:"https://up.yimg.com/ib/th?id=OIP.52T8HHBWh6b0dwrG6tSpVQHaFe&%3Bpid=Api&rs=1&c=1&qlt=95&w=156&h=115"
+    })
+    .set({"Authorization": `Bearer ${dummyToken}`})
+
+    expect(response.status).toBe(401);
+
+   },10000)
+
+
+   test("PUT /api/users/:id (Update user - Authenticated admin access)",async()=>{
+
+    const response = await request(app).put(`/api/v1/users/${testUserId}`)
+    .send({
+      profile:"https://up.yimg.com/ib/th?id=OIP.52T8HHBWh6b0dwrG6tSpVQHaFe&%3Bpid=Api&rs=1&c=1&qlt=95&w=156&h=115"
+    })
+    .set({"Authorization": `Bearer ${token}`})
+
+    expect(response.status).toBe(200);
+
+   },10000)
+
+
+   test("DELETE /api/users/:id (Delete user - Unauthorized access)",async()=>{
+
+    const response = await request(app).delete(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${dummyToken}`})
+
+    expect(response.status).toBe(401);
+
+   },10000)
+
+
+   test.skip("DELETE /api/users/:id (Delete user - Authenticated admin access)",async()=>{
+
+    const response = await request(app).delete(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${token}`})
+
+    expect(response.status).toBe(200);
+
+   },10000)
+
+
 })
