@@ -6,8 +6,8 @@ import dotenv from "dotenv"
 dotenv.config()
 export const generateUserToken = (user: any) => {
     try {
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, {
-            expiresIn: `${process.env.JWT_EXPIRES_IN}` as string
+        const token = jwt.sign({ userId: user._id }, "soleilapp_unsensored_secret", {
+            expiresIn:"30d"
         });
         return token;
     } catch (error:any) {
@@ -18,7 +18,7 @@ export const generateUserToken = (user: any) => {
 
 export const decodeUserToken = async (token: string) => {
     try {
-        const decoded = jwt.verify(token, `${process.env.JWT_SECRET} `as string) as { userId: string };
+        const decoded = jwt.verify(token,"soleilapp_unsensored_secret") as { userId: string };
         const associatedUser = await User.findById(decoded.userId);
         return associatedUser;
     } catch (error) {
