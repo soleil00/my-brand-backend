@@ -1,6 +1,6 @@
 # Portfolio Website Backend
 
-Welcome to the backend repository for my portfolio website. This repository houses the server-side logic and database operations for managing and serving data related to my online portfolio.
+Welcome to the backend repository for my portfolio website. This repository houses the server-side logic and database operations for managing and serving data related to my portfolio.
 
 ## Description
 
