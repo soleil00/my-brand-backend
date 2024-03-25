@@ -2,9 +2,9 @@ name: Deploying app on Render
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, main-2]
   push:
-    branches: [main]
+    branches: [main, main-2]
 
 jobs:
   install_dep:
@@ -16,27 +16,18 @@ jobs:
       - name: Install all dependencies
         run: npm install
 
-  Listing_dir:
-    runs-on: ubuntu-latest
-    steps:
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
+      - name: Run tests
+        run: npm test
 
-  build_app:
-    needs: install_dep
-    runs-on: ubuntu-latest
-    steps:
-      - name: Running build command
+      - name: Build app
         run: npm run build
+          
+  build_app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: soleil00/my-brand-backend
 
-  #deploy_app_on_render:
-  #  needs: build_app
- #   runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Deploy to Render
-  #      run: |
-  #        curl -X POST -H "Content-Type: application/json" -d '{"branch": "main", "public": true}' https://api.render.com/deploy/srv-cnt7f4acn0vc73evu8cg?key=D4J_OGegb1Y
-
-   #   - name: Start server
-   #     run: cd dist/server && node index.js
