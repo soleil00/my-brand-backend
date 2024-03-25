@@ -13,14 +13,16 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Install all dependencies and build app
-        run: |
-          cd ..
-          npm install
-          npm run build
+      - name: Install all dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build app
+        run: npm run build
           
   build_app:
-    needs: install_dep
     runs-on: ubuntu-latest
     steps:
       - name: Upload coverage reports to Codecov
@@ -29,14 +31,3 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: soleil00/my-brand-backend
 
-
-  #deploy_app_on_render:
-  #  needs: build_app
- #   runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Deploy to Render
-  #      run: |
-  #        curl -X POST -H "Content-Type: application/json" -d '{"branch": "main", "public": true}' https://api.render.com/deploy/srv-cnt7f4acn0vc73evu8cg?key=D4J_OGegb1Y
-
-   #   - name: Start server
-   #     run: cd dist/server && node index.js
