@@ -2,9 +2,9 @@ name: Deploying app on Render
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, main-2]
   push:
-    branches: [main]
+    branches: [main, main-2]
 
 jobs:
   install_dep:
@@ -12,23 +12,25 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          path: my-brand-backend
 
-      - name: Install all dependencies
-        run: npm install
-
-  Listing_dir:
-    runs-on: ubuntu-latest
-    steps:
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-
+      - name: Install all dependencies and build app
+        run: npm install && npm run build
+          
   build_app:
     needs: install_dep
     runs-on: ubuntu-latest
     steps:
       - name: Running build command
+        working-directory: ${{ github.workspace }}
         run: npm run build
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: soleil00/my-brand-backend
 
   #deploy_app_on_render:
   #  needs: build_app
