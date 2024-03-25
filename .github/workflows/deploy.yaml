@@ -18,10 +18,14 @@ jobs:
       - name: Install all dependencies and build app
         run: npm install && npm run build
           
-  upload_coverage:
+  build_app:
     needs: install_dep
     runs-on: ubuntu-latest
     steps:
+      - name: Running build command
+        working-directory: ${{ github.workspace }}
+        run: npm run build
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
