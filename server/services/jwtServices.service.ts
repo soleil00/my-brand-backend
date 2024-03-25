@@ -1,29 +1,35 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import User from "../model/userMode";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
+
 export const generateUserToken = (user: any) => {
     try {
-        const token = jwt.sign({ userId: user._id }, "soleilapp_unsensored_secret", {
-            expiresIn:"30d"
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "", {
+            expiresIn: "30d"
         });
         return token;
-    } catch (error:any) {
-        console.error("Error generating user token 😒:", error.message);
+    } catch (error) {
+        console.error("Error generating user token:", error);
         throw new Error("Unable to generate user token");
     }
 };
 
 export const decodeUserToken = async (token: string) => {
     try {
-        const decoded = jwt.verify(token,"soleilapp_unsensored_secret") as { userId: string };
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "") as { userId: string };
+        if (!decoded.userId) {
+            throw new Error("Invalid token: Missing user ID");
+        }
         const associatedUser = await User.findById(decoded.userId);
+        if (!associatedUser) {
+            throw new Error("User not found");
+        }
         return associatedUser;
     } catch (error) {
         console.error("Error decoding user token:", error);
         throw new Error("Invalid token or user not found");
     }
 };
-

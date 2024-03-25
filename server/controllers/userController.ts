@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as userService from "../services/userServices"
 import * as jwtService from "../services/jwtServices.service"
+import jwt from "jsonwebtoken"
 import User from "../model/userMode";
 
 export const getAllUsers = async (req: Request, res: Response) => {
@@ -125,7 +126,9 @@ export const loginUser = async (req: Request, res: Response) => {
        
         
         if (user && isPasswordMatch) {
-            const token = jwtService.generateUserToken(user)
+            const token = jwt.sign({ userId: user._id }, "test", {
+                expiresIn: "30d"
+            });
 
             return res.status(200).json({
             status: 200,

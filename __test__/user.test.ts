@@ -3,28 +3,54 @@ import app from "../server/app"
 import { jest,describe,test,expect,beforeAll,afterAll } from "@jest/globals"
 import { after } from "node:test"
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWVlZTllMTZjYTMzOWM4ZWI4ZWE2MjIiLCJpYXQiOjE3MTEwOTk5OTksImV4cCI6MTcxMzY5MTk5OX0.f6UVPOwqBO21O8he31vGgfwChNVrlDjO0CjVQAPTA_Y"
-const dummyToken ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWViMzllMWY1MTBmNDdhYjZmNjkyOTEiLCJpYXQiOjE3MTExMDEzNzIsImV4cCI6MTcxMzY5MzM3Mn0.9YQZz9PBtfJkKihoQMSOuI67jyMSQckHgFaDmbzOg95'
+
+let token :string;
+let dummyToken:string;
 
 
 describe("Test users routes",()=>{
 
-  let testUserId:string='65eb39e1f510f47ab6f69291';
-  let nonExistingUserId:string ='123456789098765432123456'
-  let newCreatedUserId:string;
+  
 
   beforeAll(async()=>{
-    const response = await request(app).post("/api/v1/users/auth/login").send({
-      email:"soleil000",
-      password:"asdd"
+
+    //register dummy user
+    const response1 = await request(app).post("/api/v1/users/auth/register").send({
+      email:"dummy1",
+      password:"dummy1",
+      username:"dummy1"
     })
 
-    testUserId = response.body.data._id
-  },10000)
+    //login dummy user
+    const response2 = await request(app).post("/api/v1/users/auth/login").send({
+      email:"dummy1",
+      password:"dummy1",
+    })
+
+    dummyToken = response2.body.token
+    testUserId = response2.body.data._id
+
+    //login admin
+    const response3 = await request(app).post("/api/v1/users/auth/login").send({
+      email:"admin",
+      password:"admin",
+    })
+
+    token = response3.body.token
+
+   
+  },20000)
 
   afterAll(async()=>{
 
-  })
+    await request(app).delete(`/api/v1/users/${dummyUserIdToBeDeleted}`).set({"Authorization": `Bearer ${token}`})
+
+  },20000)
+
+  let testUserId:string;
+  let nonExistingUserId:string ='123456789098765432123456'
+  // let newCreatedUserId:string;
+  let dummyUserIdToBeDeleted:string;
 
    test("GET /api/users (Get all users - Unauthorized access no token)",async()=>{
 
@@ -32,7 +58,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(400);
 
-   },10000)
+   },20000)
 
 
    test("GET /api/users (Get all users - Authenticated non-admin access)",async()=>{
@@ -41,7 +67,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(401);
 
-   },10000)
+   },20000)
 
 
    test("GET /api/users (Get all users - Authenticated admin access)",async()=>{
@@ -50,7 +76,8 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(200);
 
-   },10000)
+   },20000)
+
 
 
    test("GET /api/users/:id (Get single user - Unauthorized access)",async()=>{
@@ -59,7 +86,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(401);
 
-   },10000)
+   },20000)
 
 
    test("GET /api/users/:id (Get single user - Authenticated access)",async()=>{
@@ -68,7 +95,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(200);
 
-   },10000)
+   },20000)
 
 
    test("GET /api/users/:id (Get single user - Non-existent user)",async()=>{
@@ -77,12 +104,10 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(404);
 
-    // suggest invalid id lenfgth test
-
-   },10000)
+   },20000)
 
 
-   test.skip("POST /api/users/auth/register (Register user - Valid registration)",async()=>{
+   test("POST /api/users/auth/register (Register user - Valid registration)",async()=>{
 
     const response = await request(app).post("/api/v1/users/auth/register").send({
       email:"dummy@gmail.com",
@@ -90,9 +115,11 @@ describe("Test users routes",()=>{
       username:"dummy-username"
     })
 
+    dummyUserIdToBeDeleted = response.body.data._id
+
     expect(response.status).toBe(201);
 
-   },10000)
+   },20000)
 
 //
    test("POST /api/users/auth/register (Register user - Invalid registration data)",async()=>{
@@ -104,7 +131,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(400);
 
-   },10000)
+   },20000)
 
 
    test("POST /api/users/auth/login (Login user - Successful login)",async()=>{
@@ -116,7 +143,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(200);
 
-   },10000)
+   },20000)
 
 //login user here
    test("POST /api/users/auth/login (Login user - User not found)",async()=>{
@@ -128,7 +155,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(404);
 
-   },10000)
+   },20000)
 
    test("POST /api/users/auth/login (Login user - Invalid credentials,password)",async()=>{
 
@@ -139,7 +166,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(400);
 
-   },10000)
+   },20000)
 
 
    test("PUT /api/users/:id (Update user - unauthenticated access)",async()=>{
@@ -150,7 +177,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(400);
 
-   },10000)
+   },20000)
 
 
    test("PUT /api/users/:id (Update user - Authenticated non-admin access)",async()=>{
@@ -163,7 +190,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(401);
 
-   },10000)
+   },20000)
 
 
    test("PUT /api/users/:id (Update user - Authenticated admin access)",async()=>{
@@ -176,7 +203,7 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(200);
 
-   },10000)
+   },20000)
 
 
    test("DELETE /api/users/:id (Delete user - Unauthorized access)",async()=>{
@@ -185,16 +212,16 @@ describe("Test users routes",()=>{
 
     expect(response.status).toBe(401);
 
-   },10000)
+   },20000)
 
 
-   test.skip("DELETE /api/users/:id (Delete user - Authenticated admin access)",async()=>{
+   test("DELETE /api/users/:id (Delete user - Authenticated admin access)",async()=>{
 
     const response = await request(app).delete(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${token}`})
 
     expect(response.status).toBe(200);
 
-   },10000)
+   },20000)
 
 
 })

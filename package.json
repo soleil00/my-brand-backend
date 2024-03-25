@@ -7,9 +7,7 @@
     "start": "node dist/server/index.js",
     "build": "tsc",
     "dev": "nodemon  server/index.ts",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "test:coverage": "nyc --reporter=lcov jest",
-    "test:report": "nyc report --reporter=html"
+    "test": "jest --detectOpenHandles --coverage"
   },
   "keywords": [],
   "author": "",

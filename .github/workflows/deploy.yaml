@@ -10,11 +10,18 @@ jobs:
   install_dep:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Check out repository code
+        uses: actions/checkout@v4
 
       - name: Install all dependencies
         run: npm install
+
+  Listing_dir:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
 
   build_app:
     needs: install_dep
@@ -23,13 +30,13 @@ jobs:
       - name: Running build command
         run: npm run build
 
-  deploy_app_on_render:
-    needs: build_app
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Render
-        run: |
-          curl -X POST -H "Content-Type: application/json" -d '{"branch": "main", "public": true}' https://api.render.com/deploy/srv-cnt7f4acn0vc73evu8cg?key=D4J_OGegb1Y
+  #deploy_app_on_render:
+  #  needs: build_app
+ #   runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Deploy to Render
+  #      run: |
+  #        curl -X POST -H "Content-Type: application/json" -d '{"branch": "main", "public": true}' https://api.render.com/deploy/srv-cnt7f4acn0vc73evu8cg?key=D4J_OGegb1Y
 
-      - name: Start server
-        run: cd dist/server && node index.js
+   #   - name: Start server
+   #     run: cd dist/server && node index.js

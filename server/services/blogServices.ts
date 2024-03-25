@@ -49,7 +49,7 @@ export const createBlog = async (req: any) => {
       
     } catch (error:any) {
         console.log(`Error creating blog: ${error.message}`);
-        return null; // Return null to indicate failure
+        return null; 
     }
 };
 

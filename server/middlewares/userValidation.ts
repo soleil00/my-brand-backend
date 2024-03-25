@@ -4,7 +4,8 @@ import Joi from "joi";
 const userSchema = Joi.object({
     username: Joi.string().required().error(new Error("Username must be provided")),
     password: Joi.string().required().error(new Error("Password must be provided")),
-    email: Joi.string().required().error(new Error("Email must be provided"))
+    email: Joi.string().required().error(new Error("Email must be provided")),
+    isAdmin: Joi.boolean().optional()
 })
 
 
