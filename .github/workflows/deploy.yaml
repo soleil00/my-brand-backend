@@ -15,7 +15,7 @@ jobs:
 
       - name: Install all dependencies and build app
         run: |
-          cd ${{ github.workspace }}/my-brand-backend
+          cd ..
           npm install
           npm run build
           
