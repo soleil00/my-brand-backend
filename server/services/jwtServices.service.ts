@@ -7,7 +7,7 @@ dotenv.config();
 
 export const generateUserToken = (user: any) => {
     try {
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "", {
+        const token = jwt.sign({ userId: user._id }, "soleilapp", {
             expiresIn: "30d"
         });
         return token;
@@ -19,7 +19,7 @@ export const generateUserToken = (user: any) => {
 
 export const decodeUserToken = async (token: string) => {
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "") as { userId: string };
+        const decoded = jwt.verify(token, "soleilapp") as { userId: string };
         if (!decoded.userId) {
             throw new Error("Invalid token: Missing user ID");
         }

@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import log from "../utils/logger";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 
 const dbConnection = async()=>{
