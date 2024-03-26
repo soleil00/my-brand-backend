@@ -56,6 +56,8 @@ You can connect with me on [LinkedIn](https://www.linkedin.com/in/rukundo-soleil
 
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/rukundo-soleil-49688a295/)
 
+[![Codecov](https://codecov.io/gh/soleil00/my-brand-backend/branch/main/graph/badge.svg?token=b4e4b079-5d4b-403c-b6fd-14d2bd532291)](https://codecov.io/gh/soleil00/my-brand-backend)
+
 
 
 
