@@ -25,10 +25,14 @@ In this backend API, I've integrated robust authentication and authorization mec
     <img alt="Static Badge" src="https://img.shields.io/badge/Express-powerful_web_application_framework_for_Node.js_used_for_creating_RESTful_APIs-blue?style=flat-square&logo=Express&logoColor=green&color=yellow">
   </a>
   <a style="padding: 10px; width: 100%;" href="/">
-    <img alt="Static Badge" src="https://img.shields.io/badge/Mongoose-Best_ORM_To_Connect_With_Mongodb_Databse-blue?style=flat-square&logo=mongoose&color=green" width="300"/>
+    <img alt="Static Badge" src="https://img.shields.io/badge/Mongoose-Best_ORM_To_Connect_With_Mongodb_Databse-blue?style=flat-square&logo=mongoose&color=green" width="300">
   </a>
   <a style="padding: 10px; width: 100%;" href="/">
-    <img alt="Static Badge" src="https://img.shields.io/badge/Mongodb-For_Database-red?style=flat-square&logo=mongodb&color=red"/>
+    <img alt="Static Badge" src="https://img.shields.io/badge/Mongodb-For_Database-red?style=flat-square&logo=mongodb&color=red">
+  </a>
+  <a style="padding: 10px; width: 100%;" href="/">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Brevo-All_in_one_platform_for_building_long_term_customer_relationships_via_email_SMS_WhatsApp_and_chat-blue?style=flat-square&logo=Brevo&labelColor=red">
+
   </a>
 </div>
 
