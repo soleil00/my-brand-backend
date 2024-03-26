@@ -1,6 +1,9 @@
-<a href="https://codecov.io/gh/soleil00/my-brand-backend">
-  <img src="https://codecov.io/gh/soleil00/my-brand-backend/branch/main/graph/badge.svg?token=b4e4b079-5d4b-403c-b6fd-14d2bd532291" alt="Codecov" width="200"/>
-</a>
+<div style="display: flex; justify-content: center;">
+  <a href="https://codecov.io/gh/soleil00/my-brand-backend">
+    <img src="https://codecov.io/gh/soleil00/my-brand-backend/branch/main/graph/badge.svg?token=b4e4b079-5d4b-403c-b6fd-14d2bd532291" alt="Codecov" width="250"/>
+  </a>
+</div>
+
 
 
 # My Brand Backend
