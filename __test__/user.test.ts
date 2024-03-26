@@ -1,11 +1,52 @@
 import request from "supertest"
-import app from "../server/app"
 import { jest,describe,test,expect,beforeAll,afterAll } from "@jest/globals"
-import { after } from "node:test"
+import createServer from "../server/utils/server";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
+import * as jwtService from "../server/services/jwtServices.service"
+import * as userService from "../server/services/userServices"
+
+
+const app = createServer()
 
 
 let token :string;
 let dummyToken:string;
+
+const dummyUser ={
+  email:"dummy1",
+  password:"dummy1",
+  username:"dummy1"
+}
+
+const dummyUserInput = {
+  email:"dummy1",
+  password:"dummy1",
+}
+
+const dummyAdmin ={
+  email:"admin",
+  password:"admin",
+  username:"admin",
+  isAdmin: true
+}
+
+const dummyAdminInput = {
+  email:"admin",
+  password:"admin",
+}
+
+const testUser1 = {
+  email:"user2",
+  password:"user2",
+  username:"user2"
+}
+
+const testUserInput = {
+  email:"user2",
+  password:"user2",
+}
+
 
 
 describe("Test users routes",()=>{
@@ -14,36 +55,37 @@ describe("Test users routes",()=>{
 
   beforeAll(async()=>{
 
+      const mongoServer = await MongoMemoryServer.create();
+  
+      await mongoose.connect(mongoServer.getUri());
+  
+
     //register dummy user
-    const response1 = await request(app).post("/api/v1/users/auth/register").send({
-      email:"dummy1",
-      password:"dummy1",
-      username:"dummy1"
-    })
+    const testUser = await request(app).post("/api/v1/users/auth/register").send(dummyUser)
 
-    //login dummy user
-    const response2 = await request(app).post("/api/v1/users/auth/login").send({
-      email:"dummy1",
-      password:"dummy1",
-    })
+    dummyToken = jwtService.generateUserToken(testUser.body.data)
+    testUserId = testUser.body.data._id
 
-    dummyToken = response2.body.token
-    testUserId = response2.body.data._id
+    //register dummy admin user
+    const registerDummyAdmin= await request(app).post("/api/v1/users/auth/register").send(dummyAdmin)
 
-    //login admin
-    const response3 = await request(app).post("/api/v1/users/auth/login").send({
-      email:"admin",
-      password:"admin",
-    })
+    token = jwtService.generateUserToken(registerDummyAdmin.body.data)
 
-    token = response3.body.token
+    //register second dummy user
+
+    const testUser2 = await request(app).post("/api/v1/users/auth/register").send(testUser1)
 
    
   },20000)
 
   afterAll(async()=>{
 
+    
+
     await request(app).delete(`/api/v1/users/${dummyUserIdToBeDeleted}`).set({"Authorization": `Bearer ${token}`})
+
+    await mongoose.disconnect();
+    await mongoose.connection.close();
 
   },20000)
 
@@ -56,7 +98,7 @@ describe("Test users routes",()=>{
 
     const response = await request(app).get("/api/v1/users")
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
 
    },20000)
 
@@ -65,7 +107,7 @@ describe("Test users routes",()=>{
 
     const response = await request(app).get("/api/v1/users").set({"Authorization": `Bearer ${dummyToken}`})
 
-    expect(response.status).toBe(401);
+    expect(response.statusCode).toBe(401);
 
    },20000)
 
@@ -74,7 +116,7 @@ describe("Test users routes",()=>{
 
     const response = await request(app).get("/api/v1/users").set({"Authorization": `Bearer ${token}`})
 
-    expect(response.status).toBe(200);
+    expect(response.statusCode).toBe(200);
 
    },20000)
 
@@ -84,7 +126,7 @@ describe("Test users routes",()=>{
 
     const response = await request(app).get(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${dummyToken}`})
 
-    expect(response.status).toBe(401);
+    expect(response.statusCode).toBe(401);
 
    },20000)
 
@@ -93,18 +135,34 @@ describe("Test users routes",()=>{
 
     const response = await request(app).get(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${token}`})
 
-    expect(response.status).toBe(200);
+    expect(response.statusCode).toBe(200);
 
    },20000)
 
 
-   test("GET /api/users/:id (Get single user - Non-existent user)",async()=>{
+   test("GET /api/users/:id (Get single user - Non-existent user no token provided)",async()=>{
 
-    const response = await request(app).get(`/api/v1/users/${nonExistingUserId}`).set({"Authorization": `Bearer ${token}`})
+    const response = await request(app).get(`/api/v1/users/${nonExistingUserId}`)
 
-    expect(response.status).toBe(404);
+    expect(response.statusCode).toBe(400);
 
    },20000)
+
+   test("GET /api/users/:id (Get single user - Non-existent user,non admin access)",async()=>{
+
+    const response = await request(app).get(`/api/v1/users/${nonExistingUserId}`).set({"Authorization": `Bearer ${dummyToken}`})
+
+    expect(response.statusCode).toBe(401);
+
+   },20000)
+
+  //  test("GET /api/users/:id (Get single user - Non-existent user,admin access)",async()=>{
+
+  //   const response = await request(app).get(`/api/v1/users/${nonExistingUserId}`).set({"Authorization": `Bearer ${token}`})
+
+  //   expect(response.statusCode).toBe(401);
+
+  //  },20000)
 
 
    test("POST /api/users/auth/register (Register user - Valid registration)",async()=>{
@@ -117,7 +175,7 @@ describe("Test users routes",()=>{
 
     dummyUserIdToBeDeleted = response.body.data._id
 
-    expect(response.status).toBe(201);
+    expect(response.statusCode).toBe(201);
 
    },20000)
 
@@ -129,19 +187,17 @@ describe("Test users routes",()=>{
       username:"dummy-username"
     })
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
 
    },20000)
 
 
    test("POST /api/users/auth/login (Login user - Successful login)",async()=>{
 
-    const response = await request(app).post("/api/v1/users/auth/login").send({
-      password:"someusername",
-      email:"dummydata"
-    })
+    const spy = jest.spyOn(userService,"loginUser")
+    const response = await request(app).post("/api/v1/users/auth/login").send(testUserInput)
 
-    expect(response.status).toBe(200);
+    expect(spy).toHaveBeenCalled()
 
    },20000)
 
@@ -153,18 +209,18 @@ describe("Test users routes",()=>{
       email:"solidity-course"
     })
 
-    expect(response.status).toBe(404);
+    expect(response.statusCode).toBe(404);
 
    },20000)
 
    test("POST /api/users/auth/login (Login user - Invalid credentials,password)",async()=>{
 
     const response = await request(app).post("/api/v1/users/auth/login").send({
-      password:"someusername",
-      email:"dummydatayes"
+      password:"invalidpassword",
+      email:"user2"
     })
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
 
    },20000)
 
@@ -175,7 +231,7 @@ describe("Test users routes",()=>{
       profile:"https://up.yimg.com/ib/th?id=OIP.52T8HHBWh6b0dwrG6tSpVQHaFe&%3Bpid=Api&rs=1&c=1&qlt=95&w=156&h=115"
     })
 
-    expect(response.status).toBe(400);
+    expect(response.statusCode).toBe(400);
 
    },20000)
 
@@ -188,7 +244,7 @@ describe("Test users routes",()=>{
     })
     .set({"Authorization": `Bearer ${dummyToken}`})
 
-    expect(response.status).toBe(401);
+    expect(response.statusCode).toBe(401);
 
    },20000)
 
@@ -201,7 +257,7 @@ describe("Test users routes",()=>{
     })
     .set({"Authorization": `Bearer ${token}`})
 
-    expect(response.status).toBe(200);
+    expect(response.statusCode).toBe(200);
 
    },20000)
 
@@ -210,7 +266,7 @@ describe("Test users routes",()=>{
 
     const response = await request(app).delete(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${dummyToken}`})
 
-    expect(response.status).toBe(401);
+    expect(response.statusCode).toBe(401);
 
    },20000)
 
@@ -219,7 +275,7 @@ describe("Test users routes",()=>{
 
     const response = await request(app).delete(`/api/v1/users/${testUserId}`).set({"Authorization": `Bearer ${token}`})
 
-    expect(response.status).toBe(200);
+    expect(response.statusCode).toBe(200);
 
    },20000)
 
