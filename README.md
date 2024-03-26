@@ -17,15 +17,21 @@ The Portfolio Website Backend powers the dynamic functionalities of my portfolio
 
 ## Technologies Utilized
 
-<div style="display:flex;flex-direction:column;width:100%;gap:10px">
-  <a style="padding:10px" href="/"><img alt="Static Badge" src="https://img.shields.io/badge/Express-Javascript_Runtime_environment_for_running_JS_code_on_server_side-blue?style=flat-square&logo=Node.js&logoColor=orange&labelColor=aqua&color=yellow">
-</a>
- <a href="/"><img alt="Static Badge" src="https://img.shields.io/badge/Express-powerful_web_application_framework_for_Node.js_used_for_creating_RESTful_APIs-blue?style=flat-square&logo=Express&logoColor=green&color=yellow">
-</a>
-  <a href="/"> <img alt="Static Badge" src="https://img.shields.io/badge/Mongoose-Best_ORM_To_Connect_With_Mongodb_Databse-blue?style=flat-square&logo=mongoose&color=green">
- </a>
- <a href="/"><img alt="Static Badge" src="https://img.shields.io/badge/Mongodb-For_Database-red?style=flat-square&logo=mongodb&color=red" width="250"></a>
+<div style="display: flex; flex-direction: column; width: 100%;">
+  <a style="padding: 10px; width: 100%;" href="/">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Express-Javascript_Runtime_environment_for_running_JS_code_on_server_side-blue?style=flat-square&logo=Node.js&logoColor=orange&labelColor=aqua&color=yellow">
+  </a>
+  <a style="padding: 10px; width: 100%;" href="/">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Express-powerful_web_application_framework_for_Node.js_used_for_creating_RESTful_APIs-blue?style=flat-square&logo=Express&logoColor=green&color=yellow">
+  </a>
+  <a style="padding: 10px; width: 100%;" href="/">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Mongoose-Best_ORM_To_Connect_With_Mongodb_Databse-blue?style=flat-square&logo=mongoose&color=green">
+  </a>
+  <a style="padding: 10px; width: 100%;" href="/">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Mongodb-For_Database-red?style=flat-square&logo=mongodb&color=red" width="250">
+  </a>
 </div>
+
 
 
 
