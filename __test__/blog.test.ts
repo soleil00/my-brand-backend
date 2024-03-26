@@ -63,7 +63,8 @@ describe('Blog Routes', () => {
 
     const mongoServer = await MongoMemoryServer.create();
   
-      await mongoose.connect(mongoServer.getUri());
+      await mongoose.connect("mongodb+srv://user1:user1@cluster0.q3w70mq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+      // await mongoose.connect(mongoServer.getUri());
     
 
        //register dummy user

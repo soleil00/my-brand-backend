@@ -19,10 +19,7 @@ const dummyUser ={
   username:"dummy1"
 }
 
-const dummyUserInput = {
-  email:"dummy1",
-  password:"dummy1",
-}
+
 
 const dummyAdmin ={
   email:"admin",
@@ -31,10 +28,6 @@ const dummyAdmin ={
   isAdmin: true
 }
 
-const dummyAdminInput = {
-  email:"admin",
-  password:"admin",
-}
 
 const testUser1 = {
   email:"user2",
@@ -57,7 +50,9 @@ describe("Test users routes",()=>{
 
       const mongoServer = await MongoMemoryServer.create();
   
-      await mongoose.connect(mongoServer.getUri());
+      await mongoose.connect("mongodb+srv://user1:user1@cluster0.q3w70mq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+      // await mongoose.connect(mongoServer.getUri());
+    
   
 
     //register dummy user
