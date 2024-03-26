@@ -1,4 +1,4 @@
-name: My brand ci/cd
+name: My brand ci
 
 on:
   pull_request:
@@ -11,45 +11,25 @@ on:
       - main-2
 
 jobs:
-  checkout_code:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-  setup_node_version:
-    needs: checkout_code
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-  install_dependencies:
-   needs: setup_node_version
-   runs-on: ubuntu-latest
+      - name: Install dependencies
+        run: npm install
 
-   steps:
-    - name: Installing dependencies
-      run: npm install
+      - name: Run tests
+        run: npm test
 
-  running_tests:
-   needs: install_dependencies
-   runs-on: ubuntu-latest
-
-   steps:
-    - name: Running tests
-      run: npm run test
-
-  build_project:
-   needs: running_tests
-   runs-on: ubuntu-latest
-
-   steps:
-    - name: Building project
-      run: npm run build
+      - name: Build app
+        run: npm run build
 
   
