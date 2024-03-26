@@ -6,6 +6,7 @@ import { jest,describe,test,expect,beforeAll,afterAll } from "@jest/globals"
 import createServer from "../server/utils/server";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
+import User from "../server/model/userMode";
 
 const app = createServer()
 
@@ -39,7 +40,7 @@ const testUser ={
 
       const mongoServer = await MongoMemoryServer.create();
       await mongoose.connect("mongodb+srv://user1:user1@cluster0.q3w70mq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
-      // await mongoose.connect(mongoServer.getUri());
+     
     
 
       const dummySubscriber = await Subscriber.create(dummySub);
@@ -58,41 +59,49 @@ const testUser ={
 
     },20000)
 
+
+    afterAll(async()=>{
+
+        await Subscriber.deleteMany()
+        await User.deleteMany()
+
+    },20000)
+
     test('Get all subscribers - Admin', async () => {
        
         const response = await request(app)
             .get('/api/v1/subscribers')
             .set('Authorization', `Bearer ${token}`);
         expect(response.statusCode).toBe(200)
-    });
+    },20000);
 
     test('Get all subscribers - Unauthorized', async () => {
         const response = await request(app)
             .get('/api/v1/subscribers')
             .set('Authorization', `Bearer ${dummyToken}`);
         expect(response.status).toBe(401);
-    });
+    },20000);
 
     test('Delete subscriber - Unauthorized', async () => {
         const response = await request(app)
             .delete(`/api/v1/subscribers/${dummySubscriberId}`)
             .set('Authorization', `Bearer ${dummyToken}`);
         expect(response.status).toBe(401);
-    });
+    },20000);
 
     test('Delete subscriber - Invalid ID', async () => {
         const response = await request(app)
             .delete('/api/v1/subscribers/invalid_id')
             .set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(400);
-    });
+    },20000);
 
     test('Delete subscriber - not found', async () => {
         const response = await request(app)
             .delete('/api/v1/subscribers/66029da52ae81ab714271759')
             .set('Authorization', `Bearer ${token}`);
         expect(response.status).toBe(404);
-    });
+    },20000);
 
 
     test('Delete subscriber - Admin', async () => {
@@ -103,7 +112,7 @@ const testUser ={
         expect(response.status).toBe(200);
 
         expect(spy).toHaveBeenCalled()
-    });
+    },20000);
 
 
   })

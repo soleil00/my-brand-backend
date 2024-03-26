@@ -5,6 +5,9 @@ import createServer from "../server/utils/server";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import * as jwtService from "../server/services/jwtServices.service"
+import Blog from "../server/model/blogModel";
+import User from "../server/model/userMode";
+import Comment from "../server/model/commentModel";
 
 
 const app = createServer()
@@ -61,7 +64,7 @@ describe('Blog Routes', () => {
 
   beforeAll(async () => {
 
-    const mongoServer = await MongoMemoryServer.create();
+
   
       await mongoose.connect("mongodb+srv://user1:user1@cluster0.q3w70mq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
       // await mongoose.connect(mongoServer.getUri());
@@ -92,8 +95,9 @@ describe('Blog Routes', () => {
 
   afterAll(async () => {
 
-    await request(app)
-    .delete(`/api/v1/blogs/${testBlogId}`).set({"Authorization": `Bearer ${token}`});
+    await Blog.deleteMany()
+    await User.deleteMany()
+    await Comment.deleteMany()
 
     await mongoose.disconnect();
     await mongoose.connection.close();

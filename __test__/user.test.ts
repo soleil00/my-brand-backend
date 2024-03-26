@@ -5,6 +5,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import * as jwtService from "../server/services/jwtServices.service"
 import * as userService from "../server/services/userServices"
+import User from "../server/model/userMode";
 
 
 const app = createServer()
@@ -77,7 +78,7 @@ describe("Test users routes",()=>{
 
     
 
-    await request(app).delete(`/api/v1/users/${dummyUserIdToBeDeleted}`).set({"Authorization": `Bearer ${token}`})
+    await User.deleteMany()
 
     await mongoose.disconnect();
     await mongoose.connection.close();

@@ -7,6 +7,8 @@ import * as messageService from "../server/services/message.service"
 import * as jwtService from "../server/services/jwtServices.service"
 import * as emailService from "../server/services/email.service"
 import Subscriber from "../server/model/subscribersModel";
+import Message from "../server/model/messageModel";
+import User from "../server/model/userMode";
 
 
 const app = createServer()
@@ -84,8 +86,10 @@ describe("Test message routes", () => {
 
     afterAll(async()=>{
 
-    await request(app).delete(`/api/v1/messages/${messageIdToBeDeleted}`).set({"Authorization": `Bearer ${token}`})
-    await request(app).delete(`/api/v1/messages/${messageIdToBeDeleted2}`).set({"Authorization": `Bearer ${token}`})
+    await Message.deleteMany()
+    await User.deleteMany()
+    await Subscriber.deleteMany()
+
     await mongoose.disconnect();
     await mongoose.connection.close();
 
