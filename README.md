@@ -20,7 +20,8 @@ The Portfolio Website Backend powers the dynamic functionalities of my portfolio
 - **Node.js**: The backbone of our backend operations, providing a robust environment for executing JavaScript code server-side.
 - **Express**: Empowering us with a minimalist, yet powerful web application framework for Node.js, simplifying the creation of APIs and handling of HTTP requests.
 - **Mongoose**: The elegant MongoDB object modeling for Node.js, facilitating seamless interaction with our MongoDB database.
-- **MongoDB**: Our trusted NoSQL database solution, offering flexibility and scalability for storing and managing diverse data sets.
+- **<img alt="Static Badge" src="https://img.shields.io/badge/Mongodb-For_Database-red?style=flat-square&logo=mongodb&color=red">
+
 
 
 ## Bonus
