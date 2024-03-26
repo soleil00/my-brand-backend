@@ -44,7 +44,7 @@ export const deleteSubscriber = async (req: Request, res: Response) => {
         if (subToDelete) {
             await Subscriber.findByIdAndDelete(id)
 
-            return res.send(200).json({
+            return res.status(200).json({
                 status: 200,
                 message: "Subscriber deleted successfully"
             })

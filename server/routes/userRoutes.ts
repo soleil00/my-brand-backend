@@ -11,7 +11,7 @@ const userRoutes: Router = express.Router();
 
 userRoutes.get("/",isAuthenticated,isAdmin, getAllUsers)
 // userRoutes.get("/:id",isIdValid,isAuthenticated,isAdmin, getSingleUser)
-userRoutes.get("/:id",getSingleUser)
+userRoutes.get("/:id",isAuthenticated,isAdmin,getSingleUser)
 userRoutes.post("/auth/register",validateSignUpuser, registerUser)
 userRoutes.post("/auth/login",validateLoginUser, loginUser)
 userRoutes.put("/:id",isAuthenticated,isAdmin,updateUser)
