@@ -1,3 +1,18 @@
+<div style="text-align: center;">
+  <h1 style="font-size: 36px; color: #333;">Welcome Aboard!</h1>
+</div>
+
+<style>
+  h1 {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  h1:hover {
+    transform: scale(1.1);
+  }
+</style>
+
+
 <div style="display: flex; justify-content: center;">
   <a href="https://codecov.io/gh/soleil00/my-brand-backend">
     <img src="https://codecov.io/gh/soleil00/my-brand-backend/branch/main/graph/badge.svg?token=b4e4b079-5d4b-403c-b6fd-14d2bd532291" alt="Codecov" width="250"/>
