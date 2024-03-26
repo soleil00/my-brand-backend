@@ -19,7 +19,7 @@ In this backend API, I've integrated robust authentication and authorization mec
 
 <div style="display: flex; flex-direction: column; width: 100%;">
   <a style="padding: 10px; width: 100%;" href="/">
-    <img alt="Static Badge" src="https://img.shields.io/badge/Typescript-superset_of_JavaScript_with_added_syntax_for_types-blue?style=flat-square&logo=Typescript&labelColor=green">
+<img alt="Static Badge" src="https://img.shields.io/badge/Typescript-superset_of_JavaScript_with_added_syntax_for_types-blue?style=social&logo=Typescript&logoColor=blue&labelColor=green&color=red">
 
   </a>
   <a style="padding: 10px; width: 100%;" href="/">
