@@ -201,10 +201,10 @@ describe('Blog Routes', () => {
   });
 
   
-  describe('POST /api/v1/blogs/:id/comment', () => {
+  describe('POST /api/v1/blogs/:id/comments', () => {
     test('should add a comment to a blog', async () => {
       const response = await request(app)
-        .post(`/api/v1/blogs/${testBlogId}/comment`)
+        .post(`/api/v1/blogs/${testBlogId}/comments`)
         .send({
            content: 'This is a test comment'
         })
@@ -215,7 +215,7 @@ describe('Blog Routes', () => {
 
     test('should return 400 if u try to add commen  while u are not logged in', async () => {
       const response = await request(app)
-        .post(`/api/v1/blogs/${invalidId}/comment`)
+        .post(`/api/v1/blogs/${invalidId}/comments`)
         .send({
           comment: 'This is a test comment'
         })
@@ -224,10 +224,10 @@ describe('Blog Routes', () => {
   });
 
 
-  describe('POST /api/v1/blogs/:id/like', () => {
-    it('should add a like to a blog', async () => {
+  describe('POST /api/v1/blogs/:id/likes', () => {
+    it('should add a likes to a blog', async () => {
       const response = await request(app)
-        .post(`/api/v1/blogs/${testBlogId}/like`)
+        .post(`/api/v1/blogs/${testBlogId}/likes`)
         .set({"Authorization": `Bearer ${token}`})
         
       expect(response.status).toBe(200);
@@ -236,15 +236,15 @@ describe('Blog Routes', () => {
 
     test('should return 404 if blog id does not exist', async () => {
       const response = await request(app)
-        .post(`/api/v1/blogs/${invalidId}/like`)
+        .post(`/api/v1/blogs/${invalidId}/likes`)
         .set({"Authorization": `Bearer ${token}`})
 
       expect(response.status).toBe(404);
     },20000);
 
-    test('should return 400 if u try to add like to blog  while u are not logged in', async () => {
+    test('should return 400 if u try to add likes to blog  while u are not logged in', async () => {
       const response = await request(app)
-        .post(`/api/v1/blogs/${invalidId}/like`)
+        .post(`/api/v1/blogs/${invalidId}/likes`)
         .send({
           comment: 'This is a test comment'
         })
