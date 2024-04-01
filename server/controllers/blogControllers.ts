@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import * as blogServices from "../services/blogServices"
 import * as commentServices from "../services/comment.service"
 import { BlogDocument } from "../model/blogModel";
+import { UserDocument } from "../model/userMode";
 
 export const getAllBlogs = async (req: Request, res: Response) => {
     try {
@@ -83,21 +84,30 @@ export const deleteBlog = async (req: Request, res: Response) => {
     }
 }
 
-export const getSingleBlog = async (req: Request, res: Response) => {
+export const getSingleBlog = async (req: any, res: Response) => {
+    const currentUser: UserDocument = req.currentUser;
+
     try {
-        const blog: any = await blogServices.getBlogById(req.params.id)
+        const blog: any = await blogServices.getBlogById(req.params.id);
+    
+        const hasLiked = blog?.likes.some((like: any) => {
+            return like.equals(currentUser?._id);
+        });
+
         res.status(200).json({
             status: 200,
             success: true,
+            hasLiked,
             data: blog,
-        })
-    } catch (error:any) {
+        });
+    } catch (error: any) {
         res.status(404).json({
             status: 500,
             message: error.message
-        })
+        });
     }
-}
+};
+
 
 export const deleteAllBlogs = async (req: Request, res: Response) => {
     try {

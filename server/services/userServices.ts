@@ -1,6 +1,7 @@
 
 import { Request,Response } from "express";
 import User, { UserDocument } from "../model/userMode";
+import * as jwtService from "./jwtServices.service"
 
 
 export const getAllUsers = async () => {
@@ -89,5 +90,40 @@ export const loginUser = async (req: Request) => {
     } catch (error:any) {
         console.log(`${error.message}`)
         return 
+    }
+}
+
+
+export const autoLoginUser = async(req:Request,res:Response)=>{
+
+    const token : string | undefined = req.headers.authorization?.split(" ")[1]
+
+    try {
+
+        const user = await jwtService.decodeUserToken(token as string)
+
+
+        if(user){
+            res.status(200).json({
+                status: 200,
+                message: "User found",
+                data: user
+            })
+        } else {
+            res.status(404).json({
+                message: "User not found",
+                status: 404
+            })
+        }
+
+
+        
+    } catch (error:any) {
+
+        res.status(500).json({
+            status: 500,
+            message: error.message
+        })
+        
     }
 }

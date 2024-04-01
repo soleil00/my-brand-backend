@@ -15,7 +15,11 @@ export const addLikeToBlog = async (req: any, res: Response) => {
             });
         }
 
-        const hasLiked = currentBlog?.likes.some(like => like.equals(currentUser._id));
+        const hasLiked = currentBlog?.likes.some((like: any) => {
+            console.log('like:', like); 
+            console.log('currentUser._id:', currentUser?._id);
+            return like.equals(currentUser?._id);
+        });
 
         let updatedBlog: BlogDocument | null;
 
@@ -42,7 +46,8 @@ export const addLikeToBlog = async (req: any, res: Response) => {
 
         res.status(200).json({
             message: "Successfully added like",
-            data: updatedBlog
+            data: updatedBlog,
+            hasLiked
         });
     } catch (error:any) {
         res.status(500).json({

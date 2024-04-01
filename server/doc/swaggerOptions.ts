@@ -29,7 +29,7 @@ const options = {
     ],
     tags:["User", "Comment","Message"],
     paths: {
-        "/": {
+       "/":  {
           get: {
             tags: ["Home"],
             description: "Welcome message",
@@ -42,6 +42,9 @@ const options = {
               },
             },
           },
+          post:{
+            
+          }
         },
         "/api/v1/users": {
           get: {
@@ -159,7 +162,6 @@ const options = {
             get:{
                 tags:["Blogs"],
                 description:"Get all blogs",
-                parameters:[],
                 responses:{
                     200:{
                         description:"successfully"
@@ -194,7 +196,6 @@ const options = {
             delete :{
                 tags:["Blogs"],
                 description:"Delete all blogs",
-                parameters:[],
                 responses:{
                     201:{
                         description:"successfully"

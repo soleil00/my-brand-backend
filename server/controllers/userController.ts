@@ -126,9 +126,7 @@ export const loginUser = async (req: Request, res: Response) => {
        
         
         if (user && isPasswordMatch) {
-            const token = jwt.sign({ userId: user._id }, "test", {
-                expiresIn: "30d"
-            });
+            const token = jwtService.generateUserToken(user)
 
             return res.status(200).json({
             status: 200,
@@ -137,7 +135,7 @@ export const loginUser = async (req: Request, res: Response) => {
             token: token
         });
         } else {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "Invalid Password"
             });
         }

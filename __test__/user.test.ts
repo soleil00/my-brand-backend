@@ -216,7 +216,7 @@ describe("Test users routes",()=>{
       email:"user2"
     })
 
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(401);
 
    },20000)
 
